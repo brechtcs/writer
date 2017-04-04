@@ -1,9 +1,8 @@
-var level = require('level')
+var db = require('./level')
 var minimist = require('minimist')
 var request = require('request')
 
 var argv = minimist(process.argv.slice(2))
-var db = level(process.env.DIST_DB)
 
 if (argv.pad) {
   var ether = (usr, pwd) => `https://${usr}:${pwd}@distilled.pm/p/`

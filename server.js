@@ -1,5 +1,5 @@
+var db = require('./level')
 var assets = require('bankai')(__dirname + '/client.js')
-var db = require('level')(process.env.DIST_DB)
 var server = require('http').createServer(handler)
 var io = require('socket.io')(server)
 
