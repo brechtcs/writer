@@ -27,12 +27,21 @@ main {
   height: 62vh;
   width: 62vw;
 }
-nav {
-  text-align: center;
+button {
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
 }
 p + p {
   text-indent: 1.62em;
 }
-ul {
+
+.entries {
   list-style: none;
+}
+.entries li {
+  display: flex;
+}
+.entries .title {
+  flex: 1;
 }

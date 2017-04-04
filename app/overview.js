@@ -6,9 +6,18 @@ module.exports.display = function (state, emit) {
     <body>
       <header>Overview</header>
       <main>
-        <nav>
-          <ul>${state.all.map(item)}</ul>
-        </nav>
+        <form onsubmit=${create}>
+          <ul class="entries">
+            <li>
+              <span class="title">
+                <label for="new-pamphlet">pamphlet/</label>
+                <input id="new-pamphlet" name="pamphlet" type="text">
+              </span>
+              <button type="submit">create</button>
+            </li>
+            ${state.all.sort().map(item)}
+          </ul>
+        </form>
       </main>
     </body>
   `
@@ -16,19 +25,37 @@ module.exports.display = function (state, emit) {
   function item (entry) {
     return html`
       <li>
-        <a href=${entry}>${entry}</a>
+        <span class="title">${entry}</span>
+        <a href=${entry}>open</a>
       </li>
     `
+  }
+
+  function create (event) {
+    emit('overview:new', event.target.elements.pamphlet.value)
+    event.preventDefault()
+    event.target.reset()
   }
 }
 
 module.exports.listen = function (state, bus) {
   state.all = []
+  state.create = ''
+
+  bus.on('overview:add', function (key) {
+    state.all.push(key)
+  })
+
+  bus.on('overview:new', function (key) {
+    if (key) {
+      socket.emit('overview', {type: 'POST', keys: ['pamphlet/' + key]})
+    }
+  })
 
   socket.emit('overview', {type: 'GET'})
   socket.on('overview', function (data) {
     if (!data.error) {
-      state.all.push(data)
+      bus.emit('overview:add', data)
       bus.emit('render')
     }
   })

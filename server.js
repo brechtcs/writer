@@ -10,6 +10,7 @@ io.on('connection', function (socket) {
   socket.on('overview', function (req) {
     switch (req.type) {
       case 'GET': return emitAllEntries(socket)
+      case 'POST': return createNewEntries(socket, req.keys)
       default: return emitError(socket, 'overview')
     }
   })
@@ -39,6 +40,22 @@ server.listen(8989)
 function emitAllEntries (socket) {
   db.createKeyStream().on('data', function (key) {
     socket.emit('overview', key)
+  })
+}
+
+function createNewEntries (socket, keys) {
+  var empty = {
+    entry: {content: new Delta()}
+  }
+
+  keys.forEach(function (key) {
+    db.put(key, empty, function (err) {
+      if (err) {
+        return console.error(err)
+      }
+      console.info('created ' + key)
+      socket.emit('overview', key)
+    })
   })
 }
 
@@ -75,7 +92,7 @@ function updateSingleEntry (socket, key, update) {
       if (err) {
         return console.log(error)
       }
-      console.info('saved ' + key)
+      console.info('updated ' + key)
     })
   })
 }
