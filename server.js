@@ -9,8 +9,9 @@ var xtend = require('xtend')
 io.on('connection', function (socket) {
   socket.on('overview', function (req) {
     switch (req.type) {
-      case 'GET': return emitAllEntries(socket)
-      case 'POST': return createNewEntries(socket, req.keys)
+      case 'GET': return emitEntriesList(socket)
+      case 'DELETE': return deleteEntriesList(socket, req.keys)
+      case 'POST': return createEntriesList(socket, req.keys)
       default: return emitError(socket, 'overview')
     }
   })
@@ -37,23 +38,31 @@ server.listen(8989)
 /**
  * Socket responses:
  */
-function emitAllEntries (socket) {
-  db.createKeyStream().on('data', function (key) {
-    socket.emit('overview', key)
+function emitEntriesList (socket) {
+  db.createReadStream().on('data', function (data) {
+    if (JSON.parse(data.value).deleted !== true) {
+      socket.emit('overview', data.key)
+    }
   })
 }
 
-function createNewEntries (socket, keys) {
+function deleteEntriesList (socket, keys) {
+  keys.forEach(function (key) {
+    updateSingleEntry(socket, key, {deleted: true})
+  })
+}
+
+function createEntriesList (socket, keys) {
   var empty = {
     entry: {content: new Delta()}
   }
 
   keys.forEach(function (key) {
-    db.put(key, empty, function (err) {
+    db.put(key, JSON.stringify(empty), function (err) {
       if (err) {
         return console.error(err)
       }
-      console.info('created ' + key)
+      console.info('created ', key)
       socket.emit('overview', key)
     })
   })
@@ -73,7 +82,9 @@ function emitSingleEntry (socket, key) {
 }
 
 function updateSingleEntry (socket, key, update) {
-  socket.broadcast.emit('editor', {key: key, update: update})
+  if (update.delta) {
+    socket.broadcast.emit('editor', {key: key, update: update})
+  }
 
   db.get(key, function (err, value) {
     if (err) {
@@ -81,18 +92,21 @@ function updateSingleEntry (socket, key, update) {
     }
 
     var data = JSON.parse(value)
-    var delta = update.delta
-    delete update.delta
 
-    var content = new Delta(data.entry.content).compose(delta)
-    data.entry.content = content
+    if (update.delta) {
+      var delta = update.delta
+      var content = new Delta(data.entry.content).compose(delta)
+      data.entry.content = content
+      delete update.delta
+    }
     data = xtend(data, update)
 
     db.put(key, JSON.stringify(data), function (err) {
       if (err) {
         return console.log(error)
       }
-      console.info('updated ' + key)
+
+      console.info(update.deleted ? 'deleted' : 'updated', key)
     })
   })
 }

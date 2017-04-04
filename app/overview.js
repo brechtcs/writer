@@ -26,9 +26,14 @@ module.exports.display = function (state, emit) {
     return html`
       <li>
         <span class="title">${entry}</span>
+        <button type="button" onclick=${() => rm(entry)}>delete</button>
         <a href=${entry}>open</a>
       </li>
     `
+  }
+
+  function rm (key) {
+    emit('overview:rm', key)
   }
 
   function create (event) {
@@ -44,6 +49,15 @@ module.exports.listen = function (state, bus) {
 
   bus.on('overview:add', function (key) {
     state.all.push(key)
+  })
+
+  bus.on('overview:rm', function (key) {
+    state.all = state.all.filter(function (entry) {
+      return entry !== key
+    })
+
+    socket.emit('overview', {type: 'DELETE', keys: [key]})
+    bus.emit('render')
   })
 
   bus.on('overview:new', function (key) {

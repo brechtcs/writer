@@ -25,11 +25,12 @@ header {
 }
 main {
   height: 62vh;
-  width: 62vw;
+  width: 75vw;
 }
 button {
   background-color: transparent;
   border: none;
+  cursor: pointer;
   text-decoration: underline;
 }
 p + p {
@@ -41,6 +42,9 @@ p + p {
 }
 .entries li {
   display: flex;
+}
+.entries li > * {
+  margin: 0 3px;
 }
 .entries .title {
   flex: 1;
