@@ -33,7 +33,9 @@ module.exports.display = function (state, emit) {
   }
 
   function rm (key) {
-    emit('overview:rm', key)
+    if (confirm('Are you sure?')) {
+      emit('overview:rm', key)
+    }
   }
 
   function create (event) {
