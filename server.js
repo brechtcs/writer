@@ -62,7 +62,7 @@ function createEntriesList (socket, keys) {
       if (err) {
         return console.error(err)
       }
-      console.info('created ', key)
+      console.info('created', key)
       socket.emit('overview', key)
     })
   })
