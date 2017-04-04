@@ -1,10 +1,10 @@
-const Quill = require('quill')
+var Quill = require('quill')
 
-const component = require('nanocomponent')
-const html = require('choo/html')
+var component = require('nanocomponent')
+var html = require('choo/html')
 
 module.exports = function nanoquill (opts, cb) {
-  let quill
+  var quill
 
   return component({
     render: function () {

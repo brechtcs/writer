@@ -1,9 +1,9 @@
-const app = require('./app')
-const css = require('sheetify')
+var app = require('./app')
+var css = require('sheetify')
 
 document.title = 'Distillery'
 
-const style = css`
+var style = css`
   * {
     box-sizing: border-box;
     color: inherit;
