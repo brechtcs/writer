@@ -7,7 +7,7 @@ var html = require('choo/html')
 var nanoquill = require('./quill')
 var socket = require('./socket')
 
-css('quill/dist/quill.snow.css')
+css('quill/dist/quill.bubble.css')
 
 module.exports.display = function (state, emit) {
   if (!quill) {
@@ -17,7 +17,7 @@ module.exports.display = function (state, emit) {
         ['image', 'link']
       ]},
       placeholder: 'Post body...',
-      theme: 'snow'
+      theme: 'bubble'
     }, function (quill) {
       editor = quill
       editor.setContents(state.entry.content)
@@ -42,7 +42,7 @@ module.exports.listen = function (state, bus) {
     state.entry.content = state.entry.content.compose(update.delta)
 
     if (update.source === 'user') {
-      socket.emit('editor', {type: 'PATCH', key: state.params.wildcard, update: {delta: update.delta}})
+      socket.emit('editor', {type: 'PATCH', key: state.params.wildcard, update: {delta: update.delta, deleted: false}})
     }
     else if (update.source === 'api') {
       editor.updateContents(update.delta, 'silent')

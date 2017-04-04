@@ -5,27 +5,30 @@
   margin: 0;
   padding: 0;
 }
+html {
+  font-family: sans-serif;
+}
 body {
   background-color: #fdf6e3;
-  color: #657b83;
+  color: #622230;
   display: flex;
   flex-direction: column;
+  font-size: 1.4rem;
   align-items: center;
   height: 100vh;
 }
 header {
-  border-bottom: 3px solid #dc322f;
+  border-bottom: 3px solid #d52230;
   flex: 0 0 5rem;
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 1em;
   padding: 1rem 0;
   text-align: center;
-  width: 100vw;
 }
+header,
 main {
-  height: 62vh;
-  width: 75vw;
+  width: 100vw;
+  overflow: hidden;
 }
 button {
   background-color: transparent;
@@ -35,6 +38,12 @@ button {
 }
 p + p {
   text-indent: 1.62em;
+}
+strong {
+  font-weight: bold;
+}
+em {
+  font-style: italic;
 }
 
 .entries {
@@ -48,4 +57,16 @@ p + p {
 }
 .entries .title {
   flex: 1;
+}
+
+.pad-center,
+.ql-editor {
+  padding: 0 calc(50vw  - 14em);
+  padding-top: 1em;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.ql-bubble {
+  font-family: inherit;
+  font-size: inherit;
 }

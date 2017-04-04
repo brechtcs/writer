@@ -5,7 +5,7 @@ module.exports.display = function (state, emit) {
   return html`
     <body>
       <header>Overview</header>
-      <main>
+      <main class="pad-center">
         <form onsubmit=${create}>
           <ul class="entries">
             <li>

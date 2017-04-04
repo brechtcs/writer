@@ -4,7 +4,7 @@ module.exports.display = function (state, emit) {
   return html`
     <body>
       <header>Distillery</header>
-      <main>
+      <main class="pad-center">
         <nav>
           <a href="/overview">Sign in</a>
         </nav>
