@@ -8,7 +8,7 @@ module.exports = function nanoquill (opts, cb) {
 
   return component({
     render: function () {
-      return html`<main>
+      return html`<div>
         <article></article>
       </div>`
     },

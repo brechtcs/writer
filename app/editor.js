@@ -30,13 +30,19 @@ module.exports.display = function (state, emit) {
   return html`
     <body>
       <header>Editor</header>
-      ${quill(state.entry.content)}
+      <main style=${hide(state)}>${quill(state.entry.content)}</main>
     </body>
   `
+
+  function hide (state) {
+    if (state.loading || !state.entry.content) {
+      return 'visibility:hidden'
+    }
+  }
 }
 
 module.exports.listen = function (state, bus) {
-  state.entry = {content: new Delta()}
+  state.entry = {}
 
   bus.on('body:update', function (update) {
     state.entry.content = state.entry.content.compose(update.delta)
@@ -47,6 +53,15 @@ module.exports.listen = function (state, bus) {
     else if (update.source === 'api') {
       editor.updateContents(update.delta, 'silent')
     }
+  })
+
+  bus.on('pushState', function () {
+    state.loading = true
+
+    setTimeout(function () {
+      state.loading = false
+      bus.emit('render') //workaround for params timing issue
+    }, 150)
   })
 
   bus.on('render', function () {
