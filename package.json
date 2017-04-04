@@ -3,6 +3,7 @@
     "choo": "^5.1.4",
     "level": "^1.6.0",
     "minimist": "^1.2.0",
+    "nanocomponent": "^2.0.3",
     "quill": "^1.2.3",
     "quill-delta": "^3.5.0",
     "request": "^2.81.0",
