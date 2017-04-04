@@ -17,7 +17,7 @@ io.on('connection', function (socket) {
   socket.on('editor', function (req) {
     switch (req.type) {
       case 'GET': return emitSingleEntry(socket, req.key)
-      case 'PUT': return updateSingleEntry(socket, req.key, req.update)
+      case 'PATCH': return updateSingleEntry(socket, req.key, req.update)
       default: return emitError(socket, 'editor')
     }
   })
@@ -43,16 +43,21 @@ function emitAllEntries (socket) {
 }
 
 function emitSingleEntry (socket, key) {
-  db.get(key, function (err, data) {
+  db.get(key, function (err, value) {
     if (err) {
       return console.error(err)
     }
 
-    socket.emit('editor', JSON.parse(data))
+    var data = JSON.parse(value)
+    data.key = key
+
+    socket.emit('editor', data)
   })
 }
 
 function updateSingleEntry (socket, key, update) {
+  socket.broadcast.emit('editor', {key: key, update: update})
+
   db.get(key, function (err, value) {
     if (err) {
       return console.error(err)

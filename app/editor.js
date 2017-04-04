@@ -42,10 +42,10 @@ module.exports.listen = function (state, bus) {
     state.entry.content = state.entry.content.compose(update.delta)
 
     if (update.source === 'user') {
-      socket.emit('editor', {type: 'PUT', key: state.params.wildcard, update: {delta: update.delta}})
+      socket.emit('editor', {type: 'PATCH', key: state.params.wildcard, update: {delta: update.delta}})
     }
     else if (update.source === 'api') {
-      editor.updateContents(update.delta)
+      editor.updateContents(update.delta, 'silent')
     }
   })
 
@@ -56,10 +56,16 @@ module.exports.listen = function (state, bus) {
   })
 
   socket.on('editor', function (data) {
-    if (data.entry) {
-      state.entry = data.entry
-      state.entry.content = new Delta(data.entry.content)
-      editor.setContents(data.entry.content, 'silent')
+    if (data.key === state.params.wildcard) {
+      if (data.entry) {
+        state.entry = data.entry
+        state.entry.content = new Delta(data.entry.content)
+        editor.setContents(data.entry.content, 'silent')
+      }
+      else if (data.update) {
+        data.update.source = 'api'
+        bus.emit('body:update', data.update)
+      }
     }
   })
 }
