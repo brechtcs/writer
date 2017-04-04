@@ -30,15 +30,9 @@ module.exports.display = function (state, emit) {
   return html`
     <body>
       <header>Editor</header>
-      <main style=${hide(state)}>${quill(state.entry.content)}</main>
+      <main>${quill(state.entry.content)}</main>
     </body>
   `
-
-  function hide (state) {
-    if (state.loading || !state.entry.content) {
-      return 'visibility:hidden'
-    }
-  }
 }
 
 module.exports.listen = function (state, bus) {

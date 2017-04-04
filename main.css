@@ -27,8 +27,12 @@ header {
 }
 header,
 main {
-  width: 100vw;
+  position: relative;
   overflow: hidden;
+  width: 100vw;
+}
+main {
+  flex: 1;
 }
 button {
   background-color: transparent;
@@ -65,6 +69,11 @@ em {
   padding-top: 1em;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.ql-component{
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 .ql-bubble {
   font-family: inherit;
