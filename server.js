@@ -1,4 +1,5 @@
-var db = require('./level')
+var db = require('./data/db')
+var gateway = require('./data/gateway')(db)
 var assets = require('bankai')(__dirname + '/client.js')
 var server = require('http').createServer(handler)
 var io = require('socket.io')(server)
@@ -35,6 +36,7 @@ function handler (req, res) {
   }
 }
 
+gateway.listen(8787)
 server.listen(8989)
 
 /**

@@ -1,11 +1,14 @@
 var choo = require('choo')
+var css = require('sheetify')
 var html = require('choo/html')
 
+css('./style.css')
 var auth = require('./auth')
 var overview = require('./overview')
 var editor = require('./editor')
 
 var app = choo()
+
 
 app.use(function (state, bus) {
   if (process.env.NODE_ENV !== 'production') {

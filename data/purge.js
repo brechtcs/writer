@@ -1,4 +1,4 @@
-var db = require('./level')
+var db = require('./db')
 
 db.createReadStream().on('data', function (data) {
   if (JSON.parse(data.value).deleted === true) {

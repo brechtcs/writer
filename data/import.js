@@ -1,4 +1,4 @@
-var db = require('./level')
+var db = require('./db')
 var minimist = require('minimist')
 var request = require('request')
 

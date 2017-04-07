@@ -1,22 +1,23 @@
 {
+  "name": "distillery",
   "dependencies": {
+    "bankai": "^6.1.1",
     "choo": "^5.1.4",
     "level": "^1.6.0",
-    "minimist": "^1.2.0",
     "nanocomponent": "^2.0.3",
     "quill": "^1.2.3",
     "quill-delta": "^3.5.0",
-    "request": "^2.81.0",
     "sheetify": "^6.0.1",
     "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
-    "bankai": "^6.1.1",
-    "socket.io-client": "^1.7.3"
+    "minimist": "^1.2.0",
+    "request": "^2.81.0"
   },
   "scripts": {
     "build": "bankai build client.js www/",
-    "dev": "bankai client.js -p 8989 -o curl"
+    "start": "node server.js"
   }
 }
