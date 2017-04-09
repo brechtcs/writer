@@ -40,9 +40,6 @@ button {
   cursor: pointer;
   text-decoration: underline;
 }
-p + p {
-  text-indent: 1.62em;
-}
 strong {
   font-weight: bold;
 }
@@ -70,12 +67,18 @@ em {
   overflow-x: hidden;
   overflow-y: auto;
 }
-.ql-component{
+.ql-bubble {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.ql-component {
   position: absolute;
   height: 100%;
   width: 100%;
 }
-.ql-bubble {
-  font-family: inherit;
-  font-size: inherit;
+.ql-component p + p,
+.ql-component * + p,
+.ql-component p + * {
+  margin-top: 1em;
 }

@@ -14,7 +14,9 @@ module.exports.display = function (state, emit) {
     quill = nanoquill({
       modules: {toolbar: [
         ['bold', 'italic', 'strike'],
-        ['image', 'link']
+        [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote'],
+        ['image', 'link'],
+        ['clean']
       ]},
       placeholder: 'Post body...',
       theme: 'bubble'
