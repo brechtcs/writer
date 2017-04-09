@@ -27,7 +27,7 @@ module.exports.display = function (state, emit) {
       <li>
         <span class="title">${entry}</span>
         <button type="button" onclick=${() => rm(entry)}>delete</button>
-        <a href=${entry}>open</a>
+        <a href=${entry}>edit</a>
       </li>
     `
   }

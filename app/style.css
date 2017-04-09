@@ -22,8 +22,8 @@ header {
   flex: 0 0 5rem;
   font-size: 2rem;
   font-weight: bold;
-  padding: 1rem 0;
-  text-align: center;
+  padding: 1rem;
+  text-align: right;
 }
 header,
 main {
@@ -49,6 +49,7 @@ em {
 
 .entries {
   list-style: none;
+  padding: 1rem;
 }
 .entries li {
   display: flex;
@@ -60,13 +61,6 @@ em {
   flex: 1;
 }
 
-.pad-center,
-.ql-editor {
-  padding: 0 calc(50vw  - 14em);
-  padding-top: 1em;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 .ql-bubble {
   font-family: inherit;
   font-size: inherit;
@@ -81,4 +75,8 @@ em {
 .ql-component * + p,
 .ql-component p + * {
   margin-top: 1em;
+}
+.ql-editor {
+  overflow: auto;
+  padding-right: calc(100vw - 40rem);
 }
