@@ -62,12 +62,28 @@ function createEntriesList (socket, keys) {
   }
 
   keys.forEach(function (key) {
-    db.put(key, JSON.stringify(empty), function (err) {
-      if (err) {
+    db.get(key, function (err, value) {
+      if (err && !err.notFound) {
         return console.error(err)
       }
-      console.info('created', key)
-      socket.emit('overview', key)
+      var create = err && err.notFound
+
+      if (!err && JSON.parse(value).deleted) {
+        create = true
+      }
+
+      if (create) {
+        db.put(key, JSON.stringify(empty), function (err) {
+          if (err) {
+            return console.error(err)
+          }
+          console.info('created', key)
+          socket.emit('overview', key)
+        })
+      }
+      else {
+        console.info('exists', key)
+      }
     })
   })
 }
