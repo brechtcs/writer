@@ -15,6 +15,7 @@ module.exports.display = function (state, emit) {
       modules: {toolbar: [
         ['bold', 'italic', 'strike'],
         [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote'],
+        [{'align': []}],
         ['image', 'link'],
         ['clean']
       ]},
