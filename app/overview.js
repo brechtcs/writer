@@ -6,7 +6,7 @@ module.exports.display = function (state, emit) {
     <body>
       <header>Overview</header>
       <main class="pad-center">
-        <form onsubmit=${create}>
+        <form onsubmit=${create} style="height:100%; overflow:auto">
           <ul class="entries">
             <li>
               <span class="title">
