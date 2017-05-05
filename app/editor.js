@@ -47,6 +47,9 @@ module.exports.listen = function (state, bus) {
   state.entry = {}
 
   bus.on('body:update', function (update) {
+    if (!state.content) {
+      state.content = new Delta()
+    }
     state.content = state.content.compose(update.delta)
 
     if (update.source === 'user') {
@@ -76,8 +79,14 @@ module.exports.listen = function (state, bus) {
     if (data.key === state.params.wildcard) {
       if (data.entry) {
         state.entry = data.entry
-        state.content = new Delta(data.content)
-        editor.setContents(data.content, 'silent')
+
+        if (data.content) {
+          state.content = new Delta(data.content)
+          editor.setContents(data.content, 'silent')
+        }
+        else if (data.html) {
+          editor.clipboard.dangerouslyPasteHTML(0, data.html, 'silent')
+        }
       }
       else if (data.update) {
         data.update.source = 'api'
