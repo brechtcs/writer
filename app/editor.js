@@ -86,6 +86,7 @@ module.exports.listen = function (state, bus) {
         }
         else if (data.html) {
           editor.clipboard.dangerouslyPasteHTML(0, data.html, 'silent')
+          socket.emit('editor', {type: 'PATCH', key: state.params.wildcard, update: {delta: editor.getContents(), deleted: false}})
         }
       }
       else if (data.update) {
