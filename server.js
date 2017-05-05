@@ -58,7 +58,8 @@ function deleteEntriesList (socket, keys) {
 
 function createEntriesList (socket, keys) {
   var empty = {
-    entry: {content: new Delta()}
+    entry: {},
+    content: new Delta()
   }
 
   keys.forEach(function (key) {
@@ -115,8 +116,8 @@ function updateSingleEntry (socket, key, update) {
 
     if (update.delta) {
       var delta = update.delta
-      var content = new Delta(data.entry.content).compose(delta)
-      data.entry.content = content
+      var content = new Delta(data.content).compose(delta)
+      data.content = content
       delete update.delta
     }
     data = xtend(data, update)
