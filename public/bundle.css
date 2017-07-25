@@ -1,0 +1,22 @@
+* {
+    color: inherit;
+}
+
+body {
+    background-color: blue;
+    color: white;
+}
+
+body * + * {
+    margin-top: 1em;
+}
+
+main {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
+dt + dd,
+dd + dd {
+    margin-top: 0;
+}
