@@ -1,8 +1,11 @@
 var bankai = require('bankai')
+var host = require('samizdat')
 var level = require('level')
-var samizdat = require('samizdat-host')
+var samizdat = require('samizdat/db')
 
-var app = samizdat(level('data'), {logLevel: 'info'})
+var db = samizdat(level('data'))
+var app = host(db, {logLevel: 'info'})
+
 var assets = bankai('client.js', {
     debug: true,
     watch: false

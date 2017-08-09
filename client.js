@@ -4,8 +4,8 @@ var http = require('xhr')
 var levelup = require('levelup')
 var leveljs = require('level-js')
 var marked = require('marked')
-var samizdat = require('samizdat-db')
-var ts = require('samizdat-ts')
+var samizdat = require('samizdat/db')
+var ts = require('samizdat/ts')
 var yml = require('js-yaml')
 
 var app = choo()
@@ -123,7 +123,7 @@ app.use(function (state, bus) {
     bus.on('version:save', function (content) {
         if (content === state.entry.editor) return
 
-        post('/_data/' + state.path.join('/'), content, function (err, version) {
+        post('/_files/' + state.path.join('/'), content, function (err, version) {
             if (err) {
                 return bus.emit('error', err)
             }
