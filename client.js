@@ -4,6 +4,7 @@ var http = require('xhr')
 var levelup = require('levelup')
 var leveljs = require('level-js')
 var marked = require('marked')
+var pull = require('pull-stream')
 var samizdat = require('samizdat/db')
 var ts = require('samizdat/ts')
 var yml = require('js-yaml')
@@ -43,20 +44,22 @@ app.use(function (state, bus) {
                 throw err
             }
 
-            var sync = data.map(function (entry) {
-                if (entry.value === '') {
-                    return {key: entry.key, value: '\n'}
-                }
-                return entry
-            })
-
-            db._level.batch(sync, function (err) {
-                if (err) {
-                    return bus.emit('error', err)
-                }
-                bus.emit('alert', 'Successfully synced data from the server')
-                bus.emit('render')
-            })
+            pull(
+                pull.values(data),
+                pull.map(function (entry) {
+                    if (entry.value === '') {
+                        return {key: entry.key, value: '\n'}
+                    }
+                    return entry
+                }),
+                db.sink(function (err) {
+                    if (err) {
+                        return bus.emit('error', err)
+                    }
+                    bus.emit('alert', 'Successfully synced data from the server')
+                    bus.emit('render')
+                })
+            )
         })
     })
 
