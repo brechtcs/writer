@@ -130,7 +130,7 @@ app.use(function (state, bus) {
         })
     })
 
-    bus.on('version:save', function (content) {
+    bus.on('version:commit', function (content) {
         if (content === state.entry.editor) return
 
         post('/_files/' + state.path.join('/'), content, function (err, version) {
@@ -256,10 +256,10 @@ app.route('/:doc/:version/edit', function (state, emit) {
     var mde
 
     return html`<body>
-        <form onsubmit=${save}>
+        <form onsubmit=${commit}>
             <fieldset class="actions">
                 <button type="button" onclick=${cancel}>cancel</button>
-                <button type="submit">save</button>
+                <button type="submit">commit</button>
             </fieldset>
             ${editor()}
         </form>
@@ -279,7 +279,11 @@ app.route('/:doc/:version/edit', function (state, emit) {
 
         onload(textarea, function (el) {
             mde = new SimpleMDE({
-                element: el.querySelector('textarea')
+                element: el.querySelector('textarea'),
+                autosave: {
+                    enabled: true,
+                    uniqueId: id
+                }
             })
         }, function (el) {
             mde = null
@@ -288,9 +292,9 @@ app.route('/:doc/:version/edit', function (state, emit) {
         return textarea
     }
 
-    function save (event) {
+    function commit (event) {
         event.preventDefault()
-        emit('version:save', mde.value())
+        emit('version:commit', mde.value())
     }
 
     function cancel () {
