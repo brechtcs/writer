@@ -1,9 +1,13 @@
+var SimpleMDE = require('simplemde')
+
 var choo = require('choo')
+var css = require('sheetify')
 var html = require('choo/html')
 var http = require('xhr')
 var levelup = require('levelup')
 var leveljs = require('level-js')
 var marked = require('marked')
+var onload = require('on-load')
 var pull = require('pull-stream')
 var samizdat = require('samizdat/db')
 var ts = require('samizdat/ts')
@@ -12,6 +16,7 @@ var yml = require('js-yaml')
 var app = choo()
 var db = samizdat(levelup('data', {db: leveljs}))
 
+css('simplemde/dist/simplemde.min.css')
 
 /**
  * App handlers
@@ -30,6 +35,8 @@ app.use(function (state, bus) {
             new Notification(msg)
         })
     }
+
+    document.title = 'Writer'
 
     bus.on('*', console.info)
     window.state = state
@@ -246,6 +253,7 @@ app.route('/:doc/:version/edit', function (state, emit) {
     if (state.path[1] !== state.params.version) {
         emit('version:load', [state.params.doc, state.params.version])
     }
+    var mde
 
     return html`<body>
         <form onsubmit=${save}>
@@ -253,15 +261,36 @@ app.route('/:doc/:version/edit', function (state, emit) {
                 <button type="button" onclick=${cancel}>cancel</button>
                 <button type="submit">save</button>
             </fieldset>
-            <fieldset class="editor">
-                <textarea name="content">${state.entry.editor}</textarea>
-            </fieldset>
+            ${editor()}
         </form>
     </body>`
 
+    function editor () {
+        var id = state.params.version + '-' + state.params.doc
+        var textarea = html`
+            <fieldset class="editor" id=${id}>
+                <textarea name="content">${state.entry.editor}</textarea>
+            </fieldset>
+        `
+
+        textarea.isSameNode = function (el) {
+            return el && el.id === id
+        }
+
+        onload(textarea, function (el) {
+            mde = new SimpleMDE({
+                element: el.querySelector('textarea')
+            })
+        }, function (el) {
+            mde = null
+        })
+
+        return textarea
+    }
+
     function save (event) {
         event.preventDefault()
-        emit('version:save', event.target.content.value)
+        emit('version:save', mde.value())
     }
 
     function cancel () {
@@ -308,7 +337,6 @@ function get (endpoint, cb) {
         if (res.statusCode === 404) {
             return cb({notFound: true})
         }
-        console.log(res)
         cb(null, res.body)
     })
 }
